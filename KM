@@ -1,0 +1,10 @@
+#include&lt;stdio.h&gt;
+int main()
+{
+float km;
+printf(&quot;Enter kilometers:&quot;);
+scanf(&quot;%f&quot;,&amp;km);
+printf(&quot;Meters=%.0f\n&quot;,km*1000);
+printf(&quot;Centimeters=%.0f\n&quot;,km*100000);
+return 0;
+}
