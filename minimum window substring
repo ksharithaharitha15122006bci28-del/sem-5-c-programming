@@ -1,0 +1,55 @@
+#include <string.h>
+#include <limits.h>
+#include <stdlib.h>
+char* minWindow(char* s, char* t) {
+    if (!s || !t || *s == '\0' || *t == '\0') {
+        return "";
+    }
+    int target_counts[128] = {0};
+    int window_counts[128] = {0};
+    int t_len = 0;
+    int required_unique = 0;
+    for (int i = 0; t[i] != '\0'; i++) {
+        if (target_counts[(unsigned char)t[i]] == 0) {
+            required_unique++;
+        }
+        target_counts[(unsigned char)t[i]]++;
+        t_len++;
+    }
+    int s_len = strlen(s);
+    int left = 0, right = 0;
+    int formed_unique = 0;
+
+    int min_len = INT_MAX;
+    int start_idx = 0;
+
+    while (right < s_len) {
+        char right_char = s[right];
+        window_counts[(unsigned char)right_char]++;
+        if (target_counts[(unsigned char)right_char] > 0 &&
+            window_counts[(unsigned char)right_char] == target_counts[(unsigned char)right_char]) {
+            formed_unique++;
+        }
+        while (left <= right && formed_unique == required_unique) {
+            char left_char = s[left];
+            if (right - left + 1 < min_len) {
+                min_len = right - left + 1;
+                start_idx = left;
+            }
+            window_counts[(unsigned char)left_char]--;
+            if (target_counts[(unsigned char)left_char] > 0 &&
+                window_counts[(unsigned char)left_char] < target_counts[(unsigned char)left_char]) {
+                formed_unique--;
+            }
+            left++;
+        }
+        right++;
+    }
+    if (min_len == INT_MAX) {
+        return "";
+    }
+    char* result = (char*)malloc((min_len + 1) * sizeof(char));
+    strncpy(result, s + start_idx, min_len);
+    result[min_len] = '\0';
+    return result;
+}
