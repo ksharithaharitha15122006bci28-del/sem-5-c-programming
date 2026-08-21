@@ -1,0 +1,40 @@
+char* longestCommonPrefix(char** strs, int strsSize)
+{
+    int     i;
+    int     k;
+    int     diff;
+    char    *total;
+    int     letter;
+
+    diff = 0;
+    i = 0;
+    k = 0;
+    while (1)
+    {
+        letter = strs[i][k];
+        while (i < strsSize)
+        {
+            if (!strs[i][k] || letter != strs[i][k])
+            {
+                diff = 1;
+                break ;
+            }
+            i++;
+        }
+        if (diff)
+            break ;
+        k++;
+        i = 0;
+    }
+    total = malloc (k + 1);
+    if (!total)
+        return (NULL);
+    total[k] = '\0';
+    k--;
+    while (k >= 0)
+    {
+        total[k] = strs[i][k];
+        k--;
+    }
+    return (total);
+}
