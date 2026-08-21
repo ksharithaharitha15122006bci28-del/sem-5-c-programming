@@ -1,0 +1,28 @@
+#include <stdbool.h>
+
+bool isIsomorphic(char* s, char* t) {
+    // Arrays to store the last seen position (index + 1) of each character
+    int map_s[256] = {0};
+    int map_t[256] = {0};
+    
+    int i = 0;
+    while (s[i] != '\0' && t[i] != '\0') {
+        // Get the ASCII values of the current characters
+        unsigned char char_s = s[i];
+        unsigned char char_t = t[i];
+        
+        // If their last recorded positions do not match, they are not isomorphic
+        if (map_s[char_s] != map_t[char_t]) {
+            return false;
+        }
+        
+        // Record the current position (using i + 1 so 0 stays reserved for "never seen")
+        map_s[char_s] = i + 1;
+        map_t[char_t] = i + 1;
+        
+        i++;
+    }
+    
+    // Return true only if both strings reached the end at the same time (equal length)
+    return (s[i] == '\0' && t[i] == '\0');
+}
