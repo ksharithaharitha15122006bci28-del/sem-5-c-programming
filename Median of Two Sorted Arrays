@@ -1,0 +1,58 @@
+void quicksort(int *arr, int low, int high)
+{
+	int	pivot;
+	int	right;
+	int	left;
+	int	tmp;
+
+	if (low >= high)
+		return ;
+	pivot = arr[high];
+	left = low;
+	right = high - 1;
+	while (right > left)
+	{
+		while (left < right && arr[left] <= pivot)
+			left++;
+		while (left < right && arr[right] >= pivot)
+			right--;
+		tmp = arr[left]; // switch
+		arr[left] = arr[right];
+		arr[right] = tmp;
+	}
+	while (arr[left] < pivot)
+		left++;
+	tmp = arr[left]; // switch with the left pivot
+	arr[left] = arr[high];
+	arr[high] = tmp;
+	quicksort(arr, low, left - 1); // recursion to the left
+	quicksort(arr, left + 1, high); // recursion to the right
+}
+
+double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size)
+{
+    int    *total;
+    int     i;
+    int     k;
+
+    total = malloc((nums1Size + nums2Size) * sizeof(int));
+    if (!total)
+        return (0);
+    i = 0;
+    k = 0;
+    while (i < nums1Size)
+    {
+        total[i] = nums1[i];
+        i++;
+    }
+    while (k < nums2Size)
+    {
+        total[i] = nums2[k];
+        i++;
+        k++;
+    }
+    quicksort(total, 0, i - 1);
+    if ((nums1Size + nums2Size) & 1)
+        return (total[i / 2]);
+    return ((total[i / 2] + total[i / 2 - 1]) / (double)2);
+}
