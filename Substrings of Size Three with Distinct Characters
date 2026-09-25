@@ -1,0 +1,23 @@
+#include <string.h>
+
+int countGoodSubstrings(char* s) {
+    int len = strlen(s);
+    int good_count = 0;
+    
+    // If the string length is less than 3, no such substrings exist
+    if (len < 3) return 0;
+    
+    // Loop through all windows of size 3
+    for (int i = 0; i <= len - 3; i++) {
+        char c1 = s[i];
+        char c2 = s[i + 1];
+        char c3 = s[i + 2];
+        
+        // Check if all three elements are unique
+        if (c1 != c2 && c2 != c3 && c1 != c3) {
+            good_count++;
+        }
+    }
+    
+    return good_count;
+}
