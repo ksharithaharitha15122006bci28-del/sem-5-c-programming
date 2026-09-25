@@ -1,0 +1,31 @@
+#include <stdlib.h>
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* decrypt(int* code, int codeSize, int k, int* returnSize) {
+    *returnSize = codeSize;
+    int* result = (int*)calloc(codeSize, sizeof(int));
+    if (k == 0) {
+        return result;
+    }
+    int start, end;
+    if (k > 0) {
+        start = 1;
+        end = k;
+    } else {
+        start = codeSize + k;
+        end = codeSize - 1;
+    }
+    int window_sum = 0;
+    for (int i = start; i <= end; i++) {
+        window_sum += code[i % codeSize];
+    }
+    for (int i = 0; i < codeSize; i++) {
+        result[i] = window_sum;
+        window_sum -= code[start % codeSize];
+        window_sum += code[(end + 1) % codeSize];
+        start++;
+        end++;
+    }
+    return result;
+}
