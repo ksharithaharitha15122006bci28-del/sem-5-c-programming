@@ -1,0 +1,52 @@
+#include <stdbool.h>
+// Using LeetCode's built-in uthash structure for C hash maps:
+
+struct NumCount {
+    int key;          // The number
+    int count;        // Its frequency
+    UT_hash_handle hh;
+};
+
+int findLHS(int* nums, int numsSize) {
+    struct NumCount* map = NULL;
+    
+    // Step 1: Populate frequencies
+    for (int i = 0; i < numsSize; i++) {
+        struct NumCount* item;
+        int val = nums[i];
+        HASH_FIND_INT(map, &val, item);
+        if (item) {
+            item->count++;
+        } else {
+            item = (struct NumCount*)malloc(sizeof(struct NumCount));
+            item->key = val;
+            item->count = 1;
+            HASH_ADD_INT(map, key, item);
+        }
+    }
+    
+    int max_length = 0;
+    struct NumCount *curr, *tmp;
+    
+    // Step 2: Look for num + 1 pairs
+    HASH_ITER(hh, map, curr, tmp) {
+        struct NumCount* next_item;
+        int target = curr->key + 1;
+        HASH_FIND_INT(map, &target, next_item);
+        
+        if (next_item) {
+            int current_length = curr->count + next_item->count;
+            if (current_length > max_length) {
+                max_length = current_length;
+            }
+        }
+    }
+    
+    // Clean up memory
+    HASH_ITER(hh, map, curr, tmp) {
+        HASH_DEL(map, curr);
+        free(curr);
+    }
+    
+    return max_length;
+}
