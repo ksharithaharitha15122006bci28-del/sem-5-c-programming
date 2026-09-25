@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int divisorSubstrings(int num, int k) {
+    char num_str[12];
+    sprintf(num_str, "%d", num);
+    int len = strlen(num_str);
+    int k_beauty = 0;
+    
+    for (int i = 0; i <= len - k; i++) {
+        // Extract substring dynamically
+        char sub_str[12] = {0};
+        strncpy(sub_str, num_str + i, k);
+        
+        int val = atoi(sub_str);
+        
+        // Avoid division by zero and check divisibility
+        if (val != 0 && num % val == 0) {
+            k_beauty++;
+        }
+    }
+    
+    return k_beauty;
+}
