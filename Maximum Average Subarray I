@@ -1,0 +1,20 @@
+double findMaxAverage(int* nums, int numsSize, int k) {
+    // Calculate the sum of the first window of size k
+    long long current_sum = 0;
+    for (int i = 0; i < k; i++) {
+        current_sum += nums[i];
+    }
+    
+    long long max_sum = current_sum;
+    
+    // Slide the window across the rest of the array
+    for (int i = k; i < numsSize; i++) {
+        current_sum += nums[i] - nums[i - k];
+        if (current_sum > max_sum) {
+            max_sum = current_sum;
+        }
+    }
+    
+    // Return the maximum average as a double
+    return (double)max_sum / k;
+}
