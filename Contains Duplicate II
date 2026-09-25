@@ -1,0 +1,50 @@
+#include <stdbool.h>
+// Note: LeetCode provides internal hash map structures like uthash for C.
+// Below is a sliding window approach with a hash table or a basic nested lookup if optimized,
+// but for an absolute O(n) solution in C, uthash is typically used:
+
+struct NumIndex {
+    int key;          // The number value
+    int index;        // Its last seen index
+    UT_hash_handle hh;
+};
+
+bool containsNearbyDuplicate(int* nums, int numsSize, int k) {
+    struct NumIndex* map = NULL;
+    
+    for (int i = 0; i < numsSize; i++) {
+        struct NumIndex* item;
+        int current_val = nums[i];
+        
+        // Find if the number already exists in our hash map
+        HASH_FIND_INT(map, &current_val, item);
+        
+        if (item != NULL) {
+            if (i - item->index <= k) {
+                // Free the hash table before returning to prevent memory leaks
+                struct NumIndex *curr, *tmp;
+                HASH_ITER(hh, map, curr, tmp) {
+                    HASH_DEL(map, curr);
+                    free(curr);
+                }
+                return true;
+            }
+            // Update the index to the latest one
+            item->index = i;
+        } else {
+            // Insert the new number and index into the map
+            item = (struct NumIndex*)malloc(sizeof(struct NumIndex));
+            item->key = current_val;
+            item->index = i;
+            HASH_ADD_INT(map, key, item);
+        }
+    }
+    
+    // Clean up hash table memory
+    struct NumIndex *curr, *tmp;
+    HASH_ITER(hh, map, curr, tmp) {
+        HASH_DEL(map, curr);
+        free(curr);
+    }
+    return false;
+}
